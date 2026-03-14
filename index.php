@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="km">
+  <head>
+    <div
+      id="login-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 3000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div class="modal-content" style="text-align: center; max-width: 400px">
+        <h2 style="margin-bottom: 20px">សូមចូលគណនី</h2>
+        <input
+          type="text"
+          id="username"
+          placeholder="ឈ្មោះអ្នកប្រើប្រាស់"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: none;
+          "
+        />
+        <input
+          type="password"
+          id="password"
+          placeholder="លេខសម្ងាត់"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+          "
+        />
+        <button
+          onclick="checkLogin()"
+          style="
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #ffeb3b;
+            cursor: pointer;
+            font-weight: bold;
+          "
+        >
+          ចូលប្រើប្រាស់
+        </button>
+      </div>
+    </div>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socially - Perfect Responsive</title>
+    <style>
+      /* --- Base & Reset --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", "Kantumruy Pro", sans-serif;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+      }
+
+      body {
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: #fff;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* --- Navbar --- */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 8%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(15px);
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .logo {
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: #fff;
+        z-index: 1001;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+      }
+      .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .nav-links a:hover {
+        color: #ffeb3b;
+      }
+
+      /* Mobile Menu Toggle */
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+        z-index: 1001;
+      }
+      .menu-toggle span {
+        width: 28px;
+        height: 3px;
+        background: #fff;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+
+      /* --- Hero Section --- */
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 150px 8% 80px;
+        min-height: 100vh;
+        gap: 40px;
+      }
+      .hero-content {
+        flex: 1;
+        min-width: 300px;
+      }
+      .hero-content h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+      .hero-content span {
+        color: #ffeb3b;
+      }
+      .hero-btn {
+        background: #fff;
+        color: #e73c7e;
+        padding: 12px 30px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        transition: 0.3s;
+      }
+      .hero-image-container {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        transform: rotate(3deg);
+      }
+      .hero-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* --- Sections & Cards --- */
+      .container {
+        padding: 60px 8%;
+      }
+      section {
+        padding: 40px 0;
+        scroll-margin-top: 100px;
+      }
+      section h2 {
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #ffeb3b;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        border-radius: 25px;
+        transition: 0.4s;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #ffeb3b;
+      }
+      .card-btn {
+        background: #fff;
+        color: #e73c7e;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 15px;
+      }
+
+      /* --- Modal Popup --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        padding: 20px;
+      }
+      .modal-content {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 30px;
+        border-radius: 25px;
+        width: 100%;
+        max-width: 500px;
+        color: white;
+      }
+      /* --- Mobile Responsive Rules --- */
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 80%;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: 0.4s ease-in-out;
+          z-index: 1000;
+        }
+        .nav-links.active {
+          right: 0;
+        }
+        .hero {
+          text-align: center;
+          padding-top: 120px;
+        }
+        .hero-image-container {
+          max-width: 250px;
+          margin: 0 auto;
+          transform: rotate(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">Socially</div>
+      <div class="menu-toggle" id="mobile-menu">
+        <span></span><span></span><span></span>
+      </div>
+      <ul class="nav-links" id="nav-list">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#lessons">មេរៀន</a></li>
+        <li><a href="#exercises">លំហាត់</a></li>
+        <li><a href="#project">Project</a></li>
+        <li><a href="#about">អំពីយើង</a></li>
+      </ul>
+    </nav>
+
+    <header id="home" class="hero">
+      <div class="hero-content">
+        <h1>Welcome To My Home Page <span>Cambodai</span></h1>
+        <p></p>
+        <a href="#lessons" class="hero-btn">ចាប់ផ្តើមឥឡូវនេះ</a>
+      </div>
+      <div class="hero-image-container">
+        <img
+          src="https://scontent.fpnh5-3.fna.fbcdn.net/v/t39.30808-6/603877908_826124446927425_2205769579056507428_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=1d70fc&_nc_eui2=AeH38dUD7VUFOmvzPydQ7DffSbfxAcUCsjZJt_EBxQKyNs5-Tf5qAkx3hn6Q_PqnAScwvUCT0UvBUKagl1mrLMuY&_nc_ohc=rl-RyQnsrXgQ7kNvwHI2_t3&_nc_oc=Adli-k30NJDUfxTbUJV-j9WQ9tPxmssYD0X2kLRrdbRBlapqB04kquT48Rng4ctM7WE&_nc_zt=23&_nc_ht=scontent.fpnh5-3.fna&_nc_gid=pUElHljLQ_ZDwJ0sYDS8Vw&_nc_ss=8&oh=00_AfwTHxfUyABb7PQveCfoeSDbHKojrjo3o6mSBH-fVJDIHQ&oe=69BADFDD"
+          alt="Home"
+        />
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="lessons">
+        <h2>មេរៀនថ្មីៗ</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>មេរៀនទី ១: HTML5</h3>
+            <p>រៀនពីរបៀបបង្កើតគ្រោងនៃវេបសាយទំនើប។</p>
+            <button
+              class="card-btn"
+              onclick="
+                openModal('មេរៀនទី ១', 'ស្វែងយល់ពី HTML5 Semantic Elements...')
+              "
+            >
+              អានមេរៀន
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="exercises">
+        <h2>លំហាត់អនុវត្ត</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>លំហាត់: Responsive</h3>
+            <p>
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កម្មវិធីទស្សន៍ទាយលេខទូរស័ព្ទ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --bg-color: #f8fafc;
+        }
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 { color: #1e293b; margin-bottom: 25px; font-size: 22px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #475569; }
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 18px;
+            transition: 0.3s;
+            outline: none;
+        }
+        input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+        button:hover { background: #4f46e5; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        
+        /* Result Section */
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f1f5f9;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .lucky-num { font-size: 40px; color: #ef4444; font-weight: 800; margin: 10px 0; }
+        .status { font-weight: bold; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+        .good { background: #dcfce7; color: #166534; }
+        .bad { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🔮 ទស្សន៍ទាយលេខសំណាង</h2>
+    
+    <form method="POST">
+        <div class="input-group">
+            <label>លេខទូរស័ព្ទរបស់អ្នក</label>
+            <input type="number" name="phone" placeholder="ឧទាហរណ៍: 012345678" required 
+                   value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>">
+        </div>
+        <button type="submit" name="check">ពិនិត្យមើលលទ្ធផល</button>
+    </form>
+
+    <?php
+    if (isset($_POST['check'])) {
+        $phone = $_POST['phone'];
+        $last_digits = substr($phone, -4); // និយមប្រើ ៤ ខ្ទង់ចុងក្រោយសម្រាប់លេខចិន
+        
+        $res = ($last_digits / 80);
+        $res_decimal = $res - floor($res);
+        $final_score = round($res_decimal * 80);
+
+        // Array ទិន្នន័យគំរូ (មិត្តអាចបន្ថែមដល់ ៨០ បាន)
+        $meanings = [
+            1 => ["លទ្ធផលល្អឥតខ្ចោះ", "ល្អ"],
+            2 => ["មានឧបសគ្គច្រើន", "អាក្រក់"],
+            61 => ["ជីវិតជួបតែរឿងសប្បាយ និងជោគជ័យ", "ល្អ"],
+            // បន្ថែមលេខផ្សេងៗទៀតនៅទីនេះ...
+        ];
+
+
+$desc = isset($meanings[$final_score]) ? $meanings[$final_score][0] : "ជាលេខមធ្យម ត្រូវការការតស៊ូទើបជោគជ័យ";
+        $status_label = isset($meanings[$final_score]) ? $meanings[$final_score][1] : "មធ្យម";
+        $status_class = ($status_label == "ល្អ") ? "good" : "bad";
+
+        echo "<div class='result-container'>";
+        echo "<div>លេខកូដសំណាងរបស់អ្នកគឺ</div>";
+        echo "<div class='lucky-num'>$final_score</div>";
+        echo "<span class='status $status_class'>$status_label</span>";
+        echo "<div style='color: #64748b; font-size: 14px;'>$desc</div>";
+        echo "</div>";
+    }
+    ?>
+</div>
+
+</body>
+</html></p>
+            <button
+              class="card-btn"
+              onclick="openModal('លំហាត់', 'ចូលសរសេរកូដ CSS Media Query...')"
+            >
+              មើលលំហាត់
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="project">
+        <h2>My Projects</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Dynamic Web Project</h3>
+            <p>
+              គម្រោងវេបសាយដែលប្រើប្រាស់ JavaScript សម្រាប់បញ្ជាមុខងារផ្សេងៗ។
+            </p>
+            <button
+              class="card-btn"
+              onclick="openModal('Project', 'នេះគឺជាគម្រោងធំទី១ របស់អ្នក!')"
+            >
+              Preview
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About Me</h2>
+        <div class="grid">
+          <div class="card" style="grid-column: 1 / -1; text-align: center">
+            <h3>ចក្ខុវិស័យរបស់យើង</h3>
+            <p>
+              How do you do? My name’s MECH MEN. I’ve heard the announcement for
+              employments of which position is a coffee maker that appeared on
+              the information board. So that in addition to respond to this
+              opportunity I have to make a good decision to apply for it on the
+              purpose to use my knowledge and experiences to work it. I Studying
+              IT in the second years at Build Bright University. As you see in
+              attaching of my curriculum vitae (CV) after you read the cover
+              letter you’ll be interested, and fond of me.
+            </p>
+
+            <button
+              class="card-btn"
+              onclick="
+                openModal(
+                  'អំពីយើង',
+                  'Socially គឺជាវេទិកាថ្មីមួយដែលត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ 2026។<br><br><b>ចក្ខុវិស័យរបស់យើង៖</b><br>បង្កើតបណ្តាញទំនាក់ទំនងសកលសម្រាប់អ្នកសិក្សា ដើម្បីចែករំលែកចំណេះដឹង និងបទពិសោធន៍។<br><br><b>ក្រុមការងារ៖</b><br>យើងជឿជាក់លើភាពច្នៃប្រឌិត និងការប្រើប្រាស់បច្ចេកវិទ្យាដើម្បីអនាគតដ៏ល្អប្រសើរ។',
+                )
+              "
+            >
+              អានបន្ថែម
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 id="modal-title" style="color: #ffeb3b"></h2>
+        <div id="modal-body" style="margin: 20px 0"></div>
+        <button
+          class="card-btn"
+          style="width: 100%; background: #ffeb3b; color: #333"
+          onclick="closeModal()"
+        >
+          យល់ព្រម
+        </button>
+      </div>
+    </div>
+    <script>
+      // ពិនិត្យមើលថាតើបាន Login ឬនៅ
+      window.onload = function () {
+        if (localStorage.getItem("isLoggedIn") === "true") {
+          document.getElementById("login-overlay").style.display = "none";
+        }
+      };
+
+      function checkLogin() {
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+
+        // កំណត់ Username និង Password ដែលអ្នកចង់បាននៅទីនេះ
+        if (user === "admin" && pass === "12345") {
+          localStorage.setItem("isLoggedIn", "true");
+          document.getElementById("login-overlay").style.display = "none";
+        } else {
+          alert("ឈ្មោះ ឬ លេខសម្ងាត់មិនត្រឹមត្រូវ!");
+        }
+      }
+      // បើក/បិទ Menu លើទូរស័ព្ទ
+      const menuToggle = document.getElementById("mobile-menu");
+      const navList = document.getElementById("nav-list");
+
+      menuToggle.addEventListener("click", () => {
+        navList.classList.toggle("active");
+        // ប្តូរសញ្ញា Menu ទៅជាសញ្ញាខ្វែង (Optional)
+        menuToggle.classList.toggle("open");
+      });
+
+      // បិទ Menu ពេលចុចលើ Link
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () =>
+          navList.classList.remove("active"),
+        );
+      });
+
+      // មុខងារ Modal
+      function openModal(title, content) {
+        document.getElementById("modal-title").innerHTML = title;
+        document.getElementById("modal-body").innerHTML = content;
+        document.getElementById("modalOverlay").style.display = "flex";
+      }
+      function closeModal() {
+        document.getElementById("modalOverlay").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
